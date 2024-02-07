@@ -16,7 +16,6 @@ on:
 
 jobs:
   staging:
-    deployment:
       runs-on: ubuntu-latest
       environment: Production
       steps:
