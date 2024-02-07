@@ -6,12 +6,19 @@ concurrency: Production
 on:
   push:
     branches:
-      - main
+      - test
+  workflow_dispatch:
+    inputs:
+      releaseType:
+        description: 'Target deployment environment'
+        required: true
+        default: 'staging'
 
 jobs:
-  deployment:
-    runs-on: ubuntu-latest
-    environment: Production
-    steps:
-      - name: deploy
-        run: echo "deployed"
+  staging:
+    deployment:
+      runs-on: ubuntu-latest
+      environment: Production
+      steps:
+       - name: deploy
+         run: echo "deployed"
