@@ -1,1 +1,17 @@
 #Main file
+name: Deployment
+
+concurrency: Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - name: deploy
+        run: echo "deployed"
