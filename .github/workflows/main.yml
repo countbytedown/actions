@@ -1,6 +1,6 @@
 #Main file
 name: Deployment
-
+run-name: Deploy to ${{ inputs.deploy_target }} by @${{ github.actor }}
 concurrency: Production
 
 on:
@@ -17,7 +17,7 @@ on:
 jobs:
   staging:
       runs-on: ubuntu-latest
-      environment: Production
+      environment: Staging
       steps:
        - name: deploy
          run: echo "deployed"
