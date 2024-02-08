@@ -30,7 +30,7 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@v4 
           with:
-            ref: $REFERENCE
+            ref: ${{ env.REFERENCE }}
             fetch-tags: true
         #- name: Label Validate
 
