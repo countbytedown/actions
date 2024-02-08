@@ -69,10 +69,10 @@ jobs:
               if [ -n "$TAG_NAME" ]; then
               TAGS+=("$TAG_NAME")
               fi
-              PACKAGE_VERSION=$(jq -r '.version' ./package.json)
-              if [ -n "$PACKAGE_VERSION" ]; then
-                  TAGS+=("$PACKAGE_VERSION")
-              fi
+              # PACKAGE_VERSION=$(jq -r '.version' ./package.json)
+              # if [ -n "$PACKAGE_VERSION" ]; then
+              #     TAGS+=("$PACKAGE_VERSION")
+              # fi
               COMMIT_HASH=$(git rev-parse --short HEAD)
               TAGS+=("$COMMIT_HASH")
               TAGS_STR=$(IFS=, ; echo "${TAGS[*]}")
