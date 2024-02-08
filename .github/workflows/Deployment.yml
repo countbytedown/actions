@@ -6,9 +6,12 @@ on:
 
 jobs:
   filter:
-    runs-on: ubuntu-latest
     if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name != 'approved'
-  
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label Check
+        run: |
+          exit 1
   validate:
     if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request') }}  
     permissions:
