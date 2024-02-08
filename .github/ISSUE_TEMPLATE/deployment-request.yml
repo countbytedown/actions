@@ -1,6 +1,8 @@
 name: Deployment Request
 description: Request a deployment to an environment
-title: "[DEPLOY]: "
+title: "DEPLOY <target> to <environment>"
+labels:
+  - "Deployment Request"
 body:
   - type: dropdown
     id: environment
