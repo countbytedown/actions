@@ -19,6 +19,16 @@ jobs:
           echo "Extracted environment: $ENVIRONMENT"
           echo "::set-output name=environment::$ENVIRONMENT"
 
+        - name: Dump GitHub context
+        env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+        echo "$GITHUB_CONTEXT" | jq .
+      
+    - name: Print issue labels
+        run: |
+        echo "Issue Labels:"
+        echo '${{ toJson(github.event.issue.labels) }}' | jq -r '.[].name'        
       - name: Deploy to Environment
         run: |
           echo "Deploying to ${{ steps.get-environment.outputs.environment }}"
