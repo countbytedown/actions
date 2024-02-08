@@ -12,3 +12,30 @@ body:
         - Production
     validations:
       required: true
+  
+  - type: input
+    id: branch
+    attributes:
+      label: Branch Name
+      description: "(Optional) Specify the branch name you want to deploy. Leave blank if deploying a tag or commit."
+      placeholder: "e.g., feature/new-feature"
+    validations:
+      required: false
+
+  - type: input
+    id: tag
+    attributes:
+      label: Tag Name
+      description: "(Optional) Specify the tag name you want to deploy. Leave blank if deploying a branch or commit."
+      placeholder: "e.g., v1.2.3"
+    validations:
+      required: false
+
+  - type: input
+    id: commit
+    attributes:
+      label: Commit Hash
+      description: "(Optional) Specify the commit hash you want to deploy. Leave blank if deploying a branch or tag."
+      placeholder: "e.g., abc123def456..."
+    validations:
+      required: false
