@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    if: ${{ github.event.issue.labels.*.name == 'Deployment Request' }}
+    #if: ${{ github.event.issue.labels.*.name == 'Deployment Request' }}
     runs-on: ubuntu-latest
     steps:
         - name: Checkout code
