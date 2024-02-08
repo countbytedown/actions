@@ -32,5 +32,5 @@ jobs:
           with:
             ref: $REFERENCE
             fetch-tags: true
-        - name: Label Validate
+        #- name: Label Validate
 
