@@ -5,28 +5,32 @@ on:
     types: [opened, edited]
 
 jobs:
-  deploy:
+  validate:
     if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request') }}
+    permissions:
+        issues: write
     runs-on: ubuntu-latest
     steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
-        # - name: Extract Environment from Issue
-        #   id: get-environment
-        #   run: |
-        #     ENVIRONMENT=$(echo '${{ github.event.issue.body }}' | grep -oP 'Target Deployment Environment:\s*\K.*')
-        #     echo "Extracted environment: $ENVIRONMENT"
-        #     echo "::set-output name=environment::$ENVIRONMENT"
-
         - name: AWK Extraction
-          id: extract_env  # Adding an ID to reference the output
           run: |
-              ENVIRONMENT=$(awk '/### Target Deployment Environment/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
+              ENVIRONMENT=$(awk '/### Target Deployment Environment:/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
               echo "Extracted environment: $ENVIRONMENT"
-              echo "environment=$ENVIRONMENT" >> $GITHUB_ENV  # Setting an environment variable
-              echo "::set-output name=environment::$ENVIRONMENT"  # Setting a step output
+              echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV  
+              TARGET=$(awk '/### Target Repository Reference:/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
+              echo "Extracted target: $TARGET"
+              echo "TARGET=$TARGET" >> $GITHUB_ENV        
+              REFERENCE=$(awk '/### Reference Value:/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
+              echo "Extracted reference: $REFERENCE"
+              echo "REFERENCE=$REFERENCE" >> $GITHUB_ENV  # Setting an environment variable
         - name: Dump GitHub context
           env:
             GITHUB_CONTEXT: ${{ toJson(github.event.issue ) }}
           run: |
             echo "$GITHUB_CONTEXT" | jq .
+        - name: Checkout code
+          uses: actions/checkout@v4 
+          with:
+            ref: $REFERENCE
+            fetch-tags: true
+        - name: Label Validate
+
