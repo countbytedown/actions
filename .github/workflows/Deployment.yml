@@ -57,7 +57,7 @@ jobs:
               });
   deploy:
     needs: validate
-    if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request') }}  &&  ${{ contains(join(github.event.issue.labels.*.name, ','), 'approved') }}  
+    if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'approved') }}  
     permissions:
         issues: write
     runs-on: ubuntu-latest
