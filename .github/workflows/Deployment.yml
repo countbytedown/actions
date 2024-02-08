@@ -11,16 +11,16 @@ jobs:
     steps:
         - name: Checkout code
           uses: actions/checkout@v2
-        - name: Extract Environment from Issue
-          id: get-environment
-          run: |
-            ENVIRONMENT=$(echo '${{ github.event.issue.body }}' | grep -oP 'Target Deployment Environment:\s*\K.*')
-            echo "Extracted environment: $ENVIRONMENT"
-            echo "::set-output name=environment::$ENVIRONMENT"
+        # - name: Extract Environment from Issue
+        #   id: get-environment
+        #   run: |
+        #     ENVIRONMENT=$(echo '${{ github.event.issue.body }}' | grep -oP 'Target Deployment Environment:\s*\K.*')
+        #     echo "Extracted environment: $ENVIRONMENT"
+        #     echo "::set-output name=environment::$ENVIRONMENT"
 
         - name: Dump GitHub context
           env:
-            GITHUB_CONTEXT: ${{ toJson(github) }}
+            GITHUB_CONTEXT: ${{ toJson(github.event) }}
           run: |
             echo "$GITHUB_CONTEXT" | jq .
 
