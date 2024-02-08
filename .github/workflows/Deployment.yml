@@ -13,13 +13,13 @@ jobs:
     steps:
         - name: AWK Extraction
           run: |
-              ENVIRONMENT=$(awk '/### Target Deployment Environment:/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
+              ENVIRONMENT=$(awk '/### Target Deployment Environment/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
               echo "Extracted environment: $ENVIRONMENT"
               echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV  
-              TARGET=$(awk '/### Target Repository Reference:/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
+              TARGET=$(awk '/### Target Repository Reference/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
               echo "Extracted target: $TARGET"
               echo "TARGET=$TARGET" >> $GITHUB_ENV        
-              REFERENCE=$(awk '/### Reference Value:/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
+              REFERENCE=$(awk '/### Reference Value/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
               echo "Extracted reference: $REFERENCE"
               echo "REFERENCE=$REFERENCE" >> $GITHUB_ENV  # Setting an environment variable
         - name: Dump GitHub context
