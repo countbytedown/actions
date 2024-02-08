@@ -7,29 +7,28 @@ on:
 jobs:
   deploy:
     if: ${{ github.event.issue.labels.*.name == 'Deployment Request' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+                uses: actions/checkout@v2
+            - name: Extract Environment from Issue
+                id: get-environment
+                run: |
+                ENVIRONMENT=$(echo '${{ github.event.issue.body }}' | grep -oP 'Target Deployment Environment:\s*\K.*')
+                echo "Extracted environment: $ENVIRONMENT"
+                echo "::set-output name=environment::$ENVIRONMENT"
 
-      - name: Extract Environment from Issue
-        id: get-environment
-        run: |
-          ENVIRONMENT=$(echo '${{ github.event.issue.body }}' | grep -oP 'Target Deployment Environment:\s*\K.*')
-          echo "Extracted environment: $ENVIRONMENT"
-          echo "::set-output name=environment::$ENVIRONMENT"
+            - name: Dump GitHub context
+                env:
+                GITHUB_CONTEXT: ${{ toJson(github) }}
+                run: |
+                echo "$GITHUB_CONTEXT" | jq .
 
-        - name: Dump GitHub context
-        env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: |
-        echo "$GITHUB_CONTEXT" | jq .
-      
-    - name: Print issue labels
-        run: |
-        echo "Issue Labels:"
-        echo '${{ toJson(github.event.issue.labels) }}' | jq -r '.[].name'        
-      - name: Deploy to Environment
-        run: |
-          echo "Deploying to ${{ steps.get-environment.outputs.environment }}"
-          # Add your deployment script here, using the extracted environment
+            - name: Print issue labels
+                run: |
+                echo "Issue Labels:"
+                echo '${{ toJson(github.event.issue.labels) }}' | jq -r '.[].name'        
+            - name: Deploy to Environment
+                run: |
+                echo "Deploying to ${{ steps.get-environment.outputs.environment }}"
+                # Add your deployment script here, using the extracted environment
