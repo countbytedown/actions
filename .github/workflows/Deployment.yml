@@ -10,6 +10,9 @@ jobs:
     permissions:
         issues: write
     runs-on: ubuntu-latest
+    concurrency:
+      group: deployment-request
+      cancel-in-progress: true
     steps:
         - name: AWK Extraction
           run: |
@@ -61,6 +64,9 @@ jobs:
     permissions:
         issues: write
     runs-on: ubuntu-latest
+    concurrency:
+      group: deployment-request
+      cancel-in-progress: true
     steps:
         - name: Generate Container Tag
           run: |
