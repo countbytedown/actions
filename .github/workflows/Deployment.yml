@@ -19,11 +19,12 @@ jobs:
         #     echo "::set-output name=environment::$ENVIRONMENT"
 
         - name: AWK Extraction
-            run: |
-                ENVIRONMENT=$(awk '/### Target Deployment Environment/{getline; getline; print; exit}' <<< ${{github.event.issue.body}} 
-                echo "Extracted environment: $ENVIRONMENT"
-                echo "::set-output name=environment::$ENVIRONMENT"
-
+          id: extract_env  # Adding an ID to reference the output
+          run: |
+              ENVIRONMENT=$(awk '/### Target Deployment Environment/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
+              echo "Extracted environment: $ENVIRONMENT"
+              echo "environment=$ENVIRONMENT" >> $GITHUB_ENV  # Setting an environment variable
+              echo "::set-output name=environment::$ENVIRONMENT"  # Setting a step output
         - name: Dump GitHub context
           env:
             GITHUB_CONTEXT: ${{ toJson(github.event.issue ) }}
