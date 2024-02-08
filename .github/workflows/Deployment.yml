@@ -6,7 +6,7 @@ on:
 
 jobs:
   validate:
-    if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request') }} && 
+    if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request') }}  
     permissions:
         issues: write
     runs-on: ubuntu-latest
@@ -55,3 +55,26 @@ jobs:
                 issue_number: issueNumber,
                 labels: ['valid']
               });
+  deploy:
+    needs: validate
+    if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request') }}  &&  ${{ contains(join(github.event.issue.labels.*.name, ','), 'approved') }}  
+    permissions:
+        issues: write
+    runs-on: ubuntu-latest
+    steps:
+        - name: Generate Container Tag
+          run: |
+              TAGS=()
+              TAG_NAME=$(git describe --tags --exact-match 2> /dev/null || echo "")
+              if [ -n "$TAG_NAME" ]; then
+              TAGS+=("$TAG_NAME")
+              fi
+              PACKAGE_VERSION=$(jq -r '.version' ./package.json)
+              if [ -n "$PACKAGE_VERSION" ]; then
+                  TAGS+=("$PACKAGE_VERSION")
+              fi
+              COMMIT_HASH=$(git rev-parse --short HEAD)
+              TAGS+=("$COMMIT_HASH")
+              TAGS_STR=$(IFS=, ; echo "${TAGS[*]}")
+              echo "Collected tags: $TAGS_STR"
+              echo "TAGS=$TAGS_STR" >> $GITHUB_ENV
