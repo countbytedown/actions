@@ -5,11 +5,16 @@ on:
     types: [opened, edited, labeled]
 
 jobs:
+  filter:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name != 'approved'
+  
   validate:
     if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request') }}  
     permissions:
         issues: write
     runs-on: ubuntu-latest
+    needs: filter
     concurrency:
       group: deployment-request
       cancel-in-progress: true
