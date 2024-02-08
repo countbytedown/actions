@@ -3,6 +3,7 @@ description: Request a deployment to an environment
 title: "DEPLOY <target> to <environment>"
 labels:
   - "Deployment Request"
+  - "invalid"
 body:
   - type: dropdown
     id: environment
