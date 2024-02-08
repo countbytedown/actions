@@ -1,0 +1,25 @@
+name: Handle Deployment Request
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  deploy:
+    if: ${{ github.event.issue.labels.*.name == 'Deployment Request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Extract Environment from Issue
+        id: get-environment
+        run: |
+          ENVIRONMENT=$(echo '${{ github.event.issue.body }}' | grep -oP 'Target Deployment Environment:\s*\K.*')
+          echo "Extracted environment: $ENVIRONMENT"
+          echo "::set-output name=environment::$ENVIRONMENT"
+
+      - name: Deploy to Environment
+        run: |
+          echo "Deploying to ${{ steps.get-environment.outputs.environment }}"
+          # Add your deployment script here, using the extracted environment

@@ -1,0 +1,14 @@
+name: Deployment Request
+description: Request a deployment to an environment
+title: "[DEPLOY]: "
+body:
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Target Deployment Environment
+      description: Select the target environment for this deployment.
+      options:
+        - Staging
+        - Production
+    validations:
+      required: true
