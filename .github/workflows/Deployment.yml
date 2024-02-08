@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - name: Checkout code
-          uses: actions/checkout@v2
+          uses: actions/checkout@v4
         # - name: Extract Environment from Issue
         #   id: get-environment
         #   run: |
@@ -20,6 +20,6 @@ jobs:
 
         - name: Dump GitHub context
           env:
-            GITHUB_CONTEXT: ${{ toJson(github.event.issue.body ) }}
+            GITHUB_CONTEXT: ${{ toJson(github.event.issue ) }}
           run: |
             echo "$GITHUB_CONTEXT" | jq .
