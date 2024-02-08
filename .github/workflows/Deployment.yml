@@ -37,11 +37,11 @@ jobs:
           with:
             script: |
               const issueNumber = context.issue.number;
-              await github.rest.issues.removeLabels({
+              await github.rest.issues.removeLabel({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issueNumber,
-                labels: ['invalid']
+                name: 'invalid'
               });
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,
