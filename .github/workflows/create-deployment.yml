@@ -75,6 +75,7 @@ jobs:
     permissions:
         issues: write
     runs-on: ubuntu-latest
+    
     concurrency:
       group: deployment-request
       cancel-in-progress: true
