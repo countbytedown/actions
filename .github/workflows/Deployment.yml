@@ -2,11 +2,12 @@ name: Handle Deployment Request
 
 on:
   issues:
-    types: [opened, edited, labeled]
+    types: [opened, edited, closed]
 
 jobs:
   filter:
-    if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'approved'
+    if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request') }}
+   # if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'approved'
     runs-on: ubuntu-latest
     concurrency:
       group: deployment-request
@@ -14,9 +15,9 @@ jobs:
     steps:
       - name: Label Check
         run: |
-          echo "Approval"
+          echo "Deployment Request"
   validate:
-    if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request') }}  
+    if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'invalid')  }}  
     permissions:
         issues: write
     runs-on: ubuntu-latest
@@ -71,7 +72,7 @@ jobs:
               });
   deploy:
     needs: validate
-    if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'approved') }}  
+    if: github.event_name == 'issues' && github.event.action == 'closed' && contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request')
     permissions:
         issues: write
     runs-on: ubuntu-latest
