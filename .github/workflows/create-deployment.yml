@@ -21,21 +21,29 @@ jobs:
         issues: write
     runs-on: ubuntu-latest
     needs: filter
+    outputs: 
+      ENVIRONMENT: ${{ steps.awk_extract.outputs.ENVIRONMENT}}
+      TARGET: ${{ env.TARGET}}
+      
     concurrency:
       group: deployment-request
       cancel-in-progress: true
     steps:
-        - name: AWK Extraction
+        - name: AWKExtraction
+          id: awk_extract
           run: |
               ENVIRONMENT=$(awk '/### Target Deployment Environment/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
               echo "Extracted environment: $ENVIRONMENT"
               echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV  
+              echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_OUTPUT  
               TARGET=$(awk '/### Target Repository Reference/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
               echo "Extracted target: $TARGET"
-              echo "TARGET=$TARGET" >> $GITHUB_ENV        
+              echo "TARGET=$TARGET" >> $GITHUB_ENV
+              echo "TARGET=$TARGET" >> $GITHUB_OUTPUT
               REFERENCE=$(awk '/### Reference Value/{getline; getline; print; exit}' <<< "${{ github.event.issue.body }}")
               echo "Extracted reference: $REFERENCE"
-              echo "REFERENCE=$REFERENCE" >> $GITHUB_ENV  # Setting an environment variable
+              echo "REFERENCE=$REFERENCE" >> $GITHUB_ENV 
+              echo "REFERENCE=$REFERENCE" >> $GITHUB_OUTPUT 
         - name: Dump GitHub context
           env:
             GITHUB_CONTEXT: ${{ toJson(github.event.issue ) }}
@@ -82,8 +90,8 @@ jobs:
       - name: Trigger Target Workflow
         uses: actions/github-script@v7
         env:  
-          TARGET_ENVIRONMENT: ${{ env.ENVIRONMENT }}
-          TARGET_REFERENCE: ${{ env.TARGET }}
+          TARGET_ENVIRONMENT: ${{ needs.validate.outputs.ENVIRONMENT }}
+          TARGET_REFERENCE: ${{ needs.validate.outputs.TARGET }}
           REFERENCE_VALUE: ${{ env.REFERENCE }}
         with:
           script: |
