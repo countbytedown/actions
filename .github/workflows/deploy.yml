@@ -9,15 +9,15 @@ on:
       targetEnvironment:
         description: 'Target Deployment Environment'
         required: true
-        default: 'Staging'
+        default: ''
       targetReference:
         description: 'Target Repository Reference'
         required: true
-        default: 'Branch'        
+        default: ''        
       referenceValue:
         description: 'Reference Value'
         required: true
-        default: 'main'        
+        default: ''        
 
 jobs:
   staging:
@@ -25,7 +25,7 @@ jobs:
     environment: ${{inputs.targetEnvironment}}
     steps:
       - name: deploy
-        run: echo "deployed ${{inputs.referenceValue}}"
+        run: echo "deployed ${{inputs.referenceValue}} to ${{inputs.targetEnvironment}}"
       - name: Checkout code
         uses: actions/checkout@v4 
         with:
