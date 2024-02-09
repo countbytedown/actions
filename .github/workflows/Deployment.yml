@@ -6,12 +6,15 @@ on:
 
 jobs:
   filter:
-    if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name != 'approved'
+    if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'approved'
     runs-on: ubuntu-latest
+    concurrency:
+      group: deployment-request
+      cancel-in-progress: true
     steps:
       - name: Label Check
         run: |
-          exit 1
+          echo "Approval"
   validate:
     if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request') }}  
     permissions:
