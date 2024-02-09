@@ -17,7 +17,6 @@ jobs:
         run: |
           echo "Deployment Request"
   validate:
-    if: ${{ contains(join(github.event.issue.labels.*.name, ','), 'invalid')  }}  
     permissions:
         issues: write
     runs-on: ubuntu-latest
@@ -72,7 +71,7 @@ jobs:
               });
   deploy:
     needs: validate
-    if: github.event_name == 'issues' && github.event.action == 'closed' && contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request')
+    if: github.event_name == 'issues' && github.event.action == 'closed' && contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request') && contains(join(github.event.issue.labels.*.name, ','), 'approved')
     permissions:
         issues: write
     runs-on: ubuntu-latest
@@ -80,6 +79,11 @@ jobs:
       group: deployment-request
       cancel-in-progress: true
     steps:
+        - name: Checkout code
+          uses: actions/checkout@v4 
+          with:
+            ref: ${{ env.REFERENCE }}
+            fetch-tags: true
         - name: Generate Container Tag
           run: |
               TAGS=()
