@@ -81,15 +81,19 @@ jobs:
     steps:
       - name: Trigger Target Workflow
         uses: actions/github-script@v7
+        env:  
+          TARGET_ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          TARGET_REFERENCE: ${{ env.TARGET }}
+          REFERENCE_VALUE: ${{ env.REFERENCE }}
         with:
           script: |
             const workflow_id = 'deploy.yml'; 
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const parameters = {
-              targetEnvironment: '${{ env.ENVIRONMENT }}',
-              targetReference: '${{ env.TARGET }}',
-              referenceValue: '${{ env.REFERENCE }}'
+              targetEnvironment: process.env.TARGET_ENVIRONMENT,
+              targetReference: process.env.TARGET_REFERENCE,
+              referenceValue: process.env.REFERENCE_VALUE
             };
             
             await github.rest.actions.createWorkflowDispatch({
