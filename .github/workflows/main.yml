@@ -1,23 +1,28 @@
 #Main file
 name: Deployment
-run-name: Deploy to ${{ inputs.deploy_target }} by @${{ github.actor }}
-concurrency: Production
+run-name: Deploy ${{inputs.referenceValue}} to ${{ inputs.targetEnvironment }} by @${{ github.actor }}
+concurrency: Deployments
 
 on:
-  push:
-    branches:
-      - test
   workflow_dispatch:
     inputs:
-      releaseType:
-        description: 'Target deployment environment'
+      targetEnvironment:
+        description: 'Target Deployment Environment'
         required: true
-        default: 'staging'
+        default: 'Staging'
+      targetReference:
+        description: 'Target Repository Reference'
+        required: true
+        default: 'Branch'        
+      referenceValue:
+        description: 'Reference Value'
+        required: true
+        default: 'main'        
 
 jobs:
   staging:
       runs-on: ubuntu-latest
-      environment: Staging
+      environment: ${{inputs.targetEnvironment}}
       steps:
        - name: deploy
-         run: echo "deployed"
+         run: echo "deployed ${{inputs.referenceValue}}"
