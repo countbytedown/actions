@@ -21,8 +21,29 @@ on:
 
 jobs:
   staging:
-      runs-on: ubuntu-latest
-      environment: ${{inputs.targetEnvironment}}
-      steps:
-       - name: deploy
-         run: echo "deployed ${{inputs.referenceValue}}"
+    runs-on: ubuntu-latest
+    environment: ${{inputs.targetEnvironment}}
+    steps:
+      - name: deploy
+        run: echo "deployed ${{inputs.referenceValue}}"
+      - name: Checkout code
+        uses: actions/checkout@v4 
+        with:
+          ref: ${{ env.REFERENCE }}
+          fetch-tags: true
+      - name: Generate Container Tag
+        run: |
+            TAGS=()
+            TAG_NAME=$(git describe --tags --exact-match 2> /dev/null || echo "")
+            if [ -n "$TAG_NAME" ]; then
+            TAGS+=("$TAG_NAME")
+            fi
+            # PACKAGE_VERSION=$(jq -r '.version' ./package.json)
+            # if [ -n "$PACKAGE_VERSION" ]; then
+            #     TAGS+=("$PACKAGE_VERSION")
+            # fi
+            COMMIT_HASH=$(git rev-parse --short HEAD)
+            TAGS+=("$COMMIT_HASH")
+            TAGS_STR=$(IFS=, ; echo "${TAGS[*]}")
+            echo "Collected tags: $TAGS_STR"
+            echo "TAGS=$TAGS_STR" >> $GITHUB_ENV
