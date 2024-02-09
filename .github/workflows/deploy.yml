@@ -29,7 +29,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4 
         with:
-          ref: ${{ env.REFERENCE }}
+          ref: ${{ inputs.referenceValue }}
           fetch-tags: true
       - name: Generate Container Tag
         run: |
