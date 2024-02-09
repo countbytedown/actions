@@ -72,7 +72,7 @@ jobs:
   deploy:
     needs: validate
     if: github.event_name == 'issues' && github.event.action == 'closed' && contains(join(github.event.issue.labels.*.name, ','), 'Deployment Request') && contains(join(github.event.issue.labels.*.name, ','), 'approved')
-    permissions: write
+    permissions: write-all
     runs-on: ubuntu-latest
     
     concurrency:
